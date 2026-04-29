@@ -1,39 +1,43 @@
 import java.util.*;
 
 class Solution {
-    public Deque<Integer> solution(int[] progresses, int[] speeds) {
-        Deque<Integer> P = new ArrayDeque<>();
-        Deque<Integer> S = new ArrayDeque<>();
-        Deque<Integer> A = new ArrayDeque<>();
+    public int[] solution(int[] progresses, int[] speeds) {
+        Queue<Integer> Qp = new ArrayDeque<>();
+        Queue<Integer> Qs = new ArrayDeque<>();
         
         for (int i = 0; i < progresses.length; i++){
-            P.offer(progresses[i]);
-            S.offer(speeds[i]);
+            Qp.offer(progresses[i]);
+            Qs.offer(speeds[i]);
         }
         
-        while(!P.isEmpty()){
-            int n = P.size();
-            int x = 0;
-            for (int i = 0; i < n; i++){
-                int p = P.poll();
-                int s = S.poll();
-                P.offer(p+s);
-                S.offer(s);
+        List<Integer> answer = new ArrayList<>();
+        
+        while (!Qp.isEmpty()){
+            int l = Qp.size();
+            for (int i = 0; i < l; i++){
+                int p = Qp.poll();
+                int s = Qs.poll();
+                Qp.offer(p+s);
+                Qs.offer(s);
             }
-            for (int i = 0; i < n; i++){
-                int p = P.getFirst();
-                if (p < 100){
-                    break;
-                }
-                P.poll();
-                S.poll();
-                x++;
+            int cnt = 0;
+            while(!Qp.isEmpty() && Qp.peek() >= 100){
+                Qp.poll();
+                Qs.poll();
+                cnt++;
             }
-            if (x > 0){
-                A.offer(x);
+            if (cnt != 0){
+                answer.add(cnt);
             }
         }
-
-        return A;
+        
+        int[] ans = new int[answer.size()];
+        
+        int idx = 0;
+        for (int n : answer){
+            ans[idx++] = n;
+        }
+        
+        return ans;
     }
 }
